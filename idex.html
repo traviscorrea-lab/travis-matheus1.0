@@ -1,1 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia Visual de Redes para Automação</title>
+  <!-- Fonte e ícones -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f4f7fb;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .app {
+      max-width: 1200px;
+      width: 100%;
+      background: white;
+      border-radius: 2.5rem;
+      box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.25);
+      overflow: hidden;
+      padding: 2rem 2rem 2.5rem;
+      transition: all 0.2s;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b2a3b;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+      border-bottom: 2px solid #e9edf4;
+      padding-bottom: 1rem;
+    }
+
+    h1 i {
+      color: #2f7b9c;
+      font-size: 2rem;
+    }
+
+    /* Abas */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.7rem 1.6rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #3a5468;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn i {
+      font-size: 1rem;
+      color: #5b7d95;
+    }
+
+    .tab-btn:hover {
+      background: #eef3f9;
+      color: #1b4c66;
+    }
+
+    .tab-btn.active {
+      background: #1b4c66;
+      color: white;
+      box-shadow: 0 4px 8px rgba(27, 76, 102, 0.2);
+    }
+
+    .tab-btn.active i {
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fade 0.25s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      0% { opacity: 0.5; transform: translateY(4px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.8rem;
+      margin-top: 0.5rem;
+    }
+
+    .card {
+      background: #f9fcff;
+      border-radius: 1.8rem;
+      padding: 1.8rem 1.2rem 1.5rem;
+      box-shadow: 0 8px 18px -8px rgba(0, 30, 40, 0.08);
+      border: 1px solid #e2ebf3;
+      transition: 0.2s;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #b6d2e3;
+      box-shadow: 0 14px 24px -10px rgba(24, 74, 102, 0.12);
+    }
+
+    .card i {
+      font-size: 2.8rem;
+      color: #1d5b7a;
+      margin-bottom: 0.5rem;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #10374b;
+      margin-bottom: 0.3rem;
+    }
+
+    .card .badge {
+      font-size: 0.75rem;
+      background: #dae8f2;
+      color: #1d4b64;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+
+    .card-detail {
+      margin-top: 1rem;
+      background: #e5f0f9;
+      border-radius: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      width: 100%;
+      font-size: 0.95rem;
+      color: #10384b;
+      font-weight: 500;
+      display: none;
+      border-left: 4px solid #2b7a9e;
+    }
+
+    .card-detail.show {
+      display: block;
+    }
+
+    .card-detail i {
+      font-size: 1rem;
+      margin-right: 0.4rem;
+      color: #1f6990;
+    }
+
+    /* Topologias */
+    .topo-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 0.5rem 0 1.8rem;
+    }
+
+    .topo-btn {
+      background: white;
+      border: 2px solid #d3e0ea;
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1f4d69;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .topo-btn i {
+      color: #2b7a9e;
+    }
+
+    .topo-btn:hover {
+      background: #ecf5fc;
+      border-color: #89b6d1;
+    }
+
+    .topo-btn.active {
+      background: #1b4c66;
+      border-color: #1b4c66;
+      color: white;
+    }
+
+    .topo-btn.active i {
+      color: white;
+    }
+
+    .topo-painel {
+      background: #f6faff;
+      border-radius: 2rem;
+      padding: 1.8rem 2rem;
+      border: 1px solid #dae7f2;
+      margin-top: 0.8rem;
+    }
+
+    .topo-painel h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #10384b;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .topo-painel .desc {
+      font-size: 1rem;
+      color: #1e3f54;
+      background: #eaf2f9;
+      padding: 0.8rem 1.2rem;
+      border-radius: 1.2rem;
+      margin: 0.8rem 0 1.2rem;
+      border-left: 4px solid #357d9e;
+    }
+
+    .lista-vantagens {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .lista-vantagens div {
+      background: white;
+      border-radius: 1.4rem;
+      padding: 1.2rem 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 20, 30, 0.03);
+      border: 1px solid #e2ebf3;
+    }
+
+    .lista-vantagens h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .lista-vantagens h4 i {
+      font-size: 1rem;
+      width: 1.4rem;
+    }
+
+    .lista-vantagens ul {
+      list-style: none;
+      padding-left: 0.2rem;
+    }
+
+    .lista-vantagens li {
+      padding: 0.3rem 0;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      border-bottom: 1px solid #eff4fa;
+    }
+
+    .lista-vantagens li:last-child {
+      border-bottom: none;
+    }
+
+    .lista-vantagens li i {
+      width: 1.2rem;
+      font-size: 0.8rem;
+      color: #3a7b9c;
+    }
+
+    .vantagem i {
+      color: #1f8b4c;
+    }
+
+    .desvantagem i {
+      color: #b13e3e;
+    }
+
+    .empty-state {
+      color: #476c82;
+      padding: 1rem 0 0.2rem;
+      font-weight: 500;
+    }
+
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: #6f8b9e;
+      text-align: center;
+      border-top: 1px solid #e2ebf3;
+      padding-top: 1.6rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* Responsivo */
+    @media (max-width: 640px) {
+      .app { padding: 1.5rem 1rem; }
+      .card-grid { grid-template-columns: 1fr; }
+      .lista-vantagens { grid-template-columns: 1fr; }
+      .tab-btn { padding: 0.5rem 1rem; font-size: 0.9rem; }
+      .topo-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1><i class="fas fa-microchip"></i> Guia Visual de Redes para Automação</h1>
+
+  <!-- Navegação por abas -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="tab1"><i class="fas fa-ethernet"></i> Cabos Industriais</button>
+    <button class="tab-btn" data-tab="tab2"><i class="fas fa-project-diagram"></i> Topologias</button>
+  </div>
+
+  <!-- ABA 1: Cabos Industriais -->
+  <div id="tab1" class="tab-content active">
+    <div class="card-grid">
+      <!-- Card Par Trançado -->
+      <div class="card" data-card="par">
+        <i class="fas fa-network-wired"></i>
+        <h3>Par Trançado</h3>
+        <span class="badge">Industrial</span>
+        <div class="card-detail" id="detail-par">
+          <i class="fas fa-arrow-right"></i> Usado em redes Ethernet em chão de fábrica, conexão de CLPs, IHM e sensores em curtas/médias distâncias. Robusto com blindagem (STP) para ambientes com ruído.
+        </div>
+      </div>
+      <!-- Card Fibra Óptica -->
+      <div class="card" data-card="fibra">
+        <i class="fas fa-fiber"></i>
+        <h3>Fibra Óptica</h3>
+        <span class="badge">Industrial</span>
+        <div class="card-detail" id="detail-fibra">
+          <i class="fas fa-arrow-right"></i> Ideal para longas distâncias, interconexão de armários, redes backbone e ambientes com alta interferência eletromagnética. Alta velocidade e imunidade a ruídos.
+        </div>
+      </div>
+      <!-- Card Wireless -->
+      <div class="card" data-card="wireless">
+        <i class="fas fa-wifi"></i>
+        <h3>Wireless</h3>
+        <span class="badge">Industrial</span>
+        <div class="card-detail" id="detail-wireless">
+          <i class="fas fa-arrow-right"></i> Utilizado em AGVs, robôs móveis, monitoramento remoto e locais de difícil cabeamento. Protocolos como Wi-Fi 6 e 5G industrial para baixa latência.
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 0.8rem; font-size: 0.9rem; color: #3b6982; background: #e6f0f8; padding: 0.5rem 1rem; border-radius: 40px; display: inline-block;">
+      <i class="fas fa-hand-pointer"></i> Clique em cada card para ver mais detalhes
+    </div>
+  </div>
+
+  <!-- ABA 2: Topologias -->
+  <div id="tab2" class="tab-content">
+    <div class="topo-buttons">
+      <button class="topo-btn active" data-topo="estrela"><i class="fas fa-star"></i> Layout em Estrela</button>
+      <button class="topo-btn" data-topo="barramento"><i class="fas fa-bars"></i> Layout em Barramento</button>
+    </div>
+
+    <div class="topo-painel" id="topo-painel">
+      <!-- conteúdo atualizado via JS -->
+      <div id="topo-conteudo">
+        <h3><i class="fas fa-star" style="color: #f5b042;"></i> Estrela</h3>
+        <div class="desc">Todos os dispositivos se conectam a um switch central. Muito comum em células de manufatura e ilhas de automação.</div>
+        <div class="lista-vantagens">
+          <div class="vantagem">
+            <h4><i class="fas fa-check-circle" style="color: #1f8b4c;"></i> Vantagens</h4>
+            <ul>
+              <li><i class="fas fa-check"></i> Isolamento de falhas: um cabo com defeito não afeta os demais.</li>
+              <li><i class="fas fa-check"></i> Facilidade de manutenção e expansão.</li>
+              <li><i class="fas fa-check"></i> Desempenho previsível em redes com switch.</li>
+            </ul>
+          </div>
+          <div class="desvantagem">
+            <h4><i class="fas fa-times-circle" style="color: #b13e3e;"></i> Desvantagens</h4>
+            <ul>
+              <li><i class="fas fa-times"></i> Ponto único de falha: se o switch central falha, toda a rede para.</li>
+              <li><i class="fas fa-times"></i> Maior quantidade de cabos (custo de infraestrutura).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <i class="fas fa-robot"></i> Automação industrial · referência rápida para o chão de fábrica
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- ABA toggle -----
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = {
+      tab1: document.getElementById('tab1'),
+      tab2: document.getElementById('tab2')
+    };
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const tabId = this.dataset.tab;
+        // remove active de todos
+        tabBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        // esconde todos e mostra o selecionado
+        Object.keys(tabContents).forEach(id => {
+          tabContents[id].classList.remove('active');
+        });
+        tabContents[tabId].classList.add('active');
+      });
+    });
+
+    // ----- Cards: mostrar / esconder detalhe (toggle) -----
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('click', function(e) {
+        // Evita que clique no botão feche se clicar dentro do detail (mas não é necessário)
+        const detail = this.querySelector('.card-detail');
+        if (detail) {
+          // Fecha todos os outros detalhes? (opcional: comportamente exclusivo)
+          // Para UX, vamos fechar os outros cards abertos e abrir este.
+          document.querySelectorAll('.card-detail').forEach(d => {
+            if (d !== detail) d.classList.remove('show');
+          });
+          detail.classList.toggle('show');
+        }
+      });
+    });
+
+    // ----- Topologias: Estrela / Barramento (com dados) -----
+    const topoData = {
+      estrela: {
+        icone: 'fa-star',
+        cor: '#f5b042',
+        titulo: 'Estrela',
+        desc: 'Todos os dispositivos se conectam a um switch central. Muito comum em células de manufatura e ilhas de automação.',
+        vantagens: [
+          'Isolamento de falhas: um cabo com defeito não afeta os demais.',
+          'Facilidade de manutenção e expansão.',
+          'Desempenho previsível em redes com switch.'
+        ],
+        desvantagens: [
+          'Ponto único de falha: se o switch central falha, toda a rede para.',
+          'Maior quantidade de cabos (custo de infraestrutura).'
+        ]
+      },
+      barramento: {
+        icone: 'fa-bars',
+        cor: '#4f8db0',
+        titulo: 'Barramento',
+        desc: 'Todos os dispositivos compartilham o mesmo meio físico (cabo backbone). Usado em redes antigas ou em aplicações específicas, como Modbus RTU em RS-485.',
+        vantagens: [
+          'Menor quantidade de cabos, economia de infraestrutura.',
+          'Simples de implementar em redes pequenas.',
+          'Custo reduzido em distâncias curtas.'
+        ],
+        desvantagens: [
+          'Se o cabo principal rompe, toda a rede fica inoperante.',
+          'Dificuldade de diagnosticar falhas (toda a rede é afetada).',
+          'Degradação de desempenho com muitos dispositivos.'
+        ]
+      }
+    };
+
+    const topoBtns = document.querySelectorAll('.topo-btn');
+    const topoConteudo = document.getElementById('topo-conteudo');
+
+    function renderTopo(tipo) {
+      const data = topoData[tipo];
+      if (!data) return;
+      const iconeClasse = data.icone;
+      const cor = data.cor;
+      const vantagensList = data.vantagens.map(v => `<li><i class="fas fa-check"></i> ${v}</li>`).join('');
+      const desvantagensList = data.desvantagens.map(d => `<li><i class="fas fa-times"></i> ${d}</li>`).join('');
+
+      topoConteudo.innerHTML = `
+        <h3><i class="fas ${iconeClasse}" style="color: ${cor};"></i> ${data.titulo}</h3>
+        <div class="desc">${data.desc}</div>
+        <div class="lista-vantagens">
+          <div class="vantagem">
+            <h4><i class="fas fa-check-circle" style="color: #1f8b4c;"></i> Vantagens</h4>
+            <ul>${vantagensList}</ul>
+          </div>
+          <div class="desvantagem">
+            <h4><i class="fas fa-times-circle" style="color: #b13e3e;"></i> Desvantagens</h4>
+            <ul>${desvantagensList}</ul>
+          </div>
+        </div>
+      `;
+    }
+
+    // Inicializa com estrela
+    renderTopo('estrela');
+
+    topoBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        topoBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const tipo = this.dataset.topo;
+        renderTopo(tipo);
+      });
+    });
+
+    // Card com clique para abrir detalhe já incluso (toggle)
+    // Se quiser que ao clicar em um card ele abra e feche os outros, já está implementado.
+
+  })();
+</script>
+</body>
+</html>
